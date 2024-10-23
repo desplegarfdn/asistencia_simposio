@@ -57,7 +57,7 @@ const handleLogin = async () => {
 </script>
 
 <template>
-  <div class="relative bg-cover bg-center bg-fixed min-h-screen min-w-[100vw]" style="background-image: url('/src/assets/palacio.jpg')">
+  <div class="relative bg-cover bg-center bg-fixed min-h-screen min-w-[100vw]" :style="{ backgroundImage: `url(${palacioImage})` }">
     <div class="absolute inset-0 bg-black opacity-50"></div>
 
     <div class="relative flex flex-col items-center justify-center min-h-screen">

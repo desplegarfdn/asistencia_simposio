@@ -18,7 +18,7 @@ onBeforeUnmount(() => {
 });
 
 const logoUrl = computed(() => {
-    return `src/assets/favicon.png`;
+    return `src/assets/logo_1.png`;
 });
 
 const onTopBarMenuButton = () => {
