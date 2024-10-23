@@ -7,8 +7,7 @@ import { ref } from 'vue';
 // import { Secciones } from '@/service/CustomerService';
 
 // Inicializar el servicio de Toast
-const toast = useToast();
-
+const toast = ref(null);
 // Token JWT almacenado
 const token = ref(localStorage.getItem('access_token')); // JWT
 console.log('Token JWT enviado:', token.value);
@@ -469,7 +468,7 @@ async function guardarEntrevista() {
 
     if (response.status === 200) {
       // Mostrar notificación de éxito
-      toast.add({
+      toast.value.add({
         severity: 'success',
         summary: '¡Éxito!',
         detail: 'Entrevista guardada correctamente.',
@@ -479,7 +478,7 @@ async function guardarEntrevista() {
     }
   } catch (error) {
     console.error('Error al guardar la entrevista:', error.response ? error.response.data : error);
-    toast.add({
+    toast.value.add({
       severity: 'error',
       summary: 'Error',
       detail: 'Hubo un problema al guardar la entrevista.',
