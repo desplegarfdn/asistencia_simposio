@@ -588,11 +588,14 @@ function resetForm() {
             <!-- Primera fila: Fecha, Hora, Folio -->
             <div class="flex flex-col md:flex-row gap-4">
                 <!-- Selector de fecha -->
-                <div class="md:w-1/4">
-                    <label for="fecha" class="font-semibold text-lg">Fecha</label>
-                    <DatePicker v-model="formData.data" :showIcon="true" :showButtonBar="true" placeholder="Selecciona la fecha" class="w-full" />
-                </div>
-
+              <div class="md:w-1/4">
+                <label for="fecha">Fecha:</label>
+                <InputText
+                  id="fecha"
+                  type="date"
+                  v-model="formData.date"
+                />
+              </div>
                 <!-- Selector de hora -->
                 <div class="md:w-1/4">
                     <label for="appointment-time" class="font-semibold text-lg">Hora</label>
