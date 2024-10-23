@@ -829,7 +829,7 @@ function resetForm() {
                 </div>
                 <div class="md:w-1/4">
                     <label for="tipoAsentamiento" class="font-semibold text-lg">Tipo de asentamiento</label>
-                    <Select v-model="formData.tipoAsentamiento" :options="dropdownValues" optionLabel="name" placeholder="Seleccione" />
+                    <Dropdown v-model="formData.tipoAsentamiento" :options="dropdownValues" optionLabel="name" placeholder="Seleccione" class="w-full"/>
                 </div>
             </div>
         </div>
