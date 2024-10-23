@@ -253,184 +253,279 @@ function onUpload() {
 
 // Función para formatear las preguntas y respuestas en el formato requerido por la API
 function formatearRespuestas() {
-    const respuestas = [];
-    // Pregunta 1
-    respuestas.push({ pregunta: '¿Cuenta con recibo de luz eléctrica?', respuesta: formData.value.luzRecibo });
-    if (formData.value.luzRecibo === 'No') {
-        respuestas.push({ pregunta: '¿Por qué no tiene recibo de luz?', respuesta: formData.value.razonLuz });
-    }else {
-        respuestas.push({ pregunta: '¿Por qué no tiene recibo de luz?', respuesta: null });
-    }
+  const respuestas = [];
 
-    // Pregunta 2
-    respuestas.push({ pregunta: '¿Cuenta con recibo de agua potable?', respuesta: formData.value.aguaRecibo });
-    if (formData.value.aguaRecibo === 'No') {
-        respuestas.push({ pregunta: '¿Por qué no tiene recibo de agua?', respuesta: formData.value.razonAgua });
-    } else {
-        respuestas.push({ pregunta: '¿Por qué no tiene recibo de agua?', respuesta: null });
-    }
-
-    // Pregunta 3
+  // Pregunta 1
+  respuestas.push({
+    pregunta: '¿Cuenta con recibo de luz eléctrica?',
+    respuesta: formData.value.luzRecibo
+  });
+  if (formData.value.luzRecibo === 'No') {
     respuestas.push({
-        pregunta: 'La vivienda es',
-        respuesta: formData.value.viviendaTipo.name // Si es un objeto con una clave 'name'
+      pregunta: '¿Por qué no tiene recibo de luz?',
+      respuesta: formData.value.razonLuz || 'No especificado'
     });
-
-    // Pregunta 4
+  } else {
     respuestas.push({
-        pregunta: 'La vivienda cuenta con',
-        respuesta: formData.value.viviendaCuentaCon.map(item => item.name).join(', ')
+      pregunta: '¿Por qué no tiene recibo de luz?',
+      respuesta: null
     });
-    //Pregunta 5
+  }
+
+  // Pregunta 2
+  respuestas.push({
+    pregunta: '¿Cuenta con recibo de agua potable?',
+    respuesta: formData.value.aguaRecibo
+  });
+  if (formData.value.aguaRecibo === 'No') {
     respuestas.push({
-        pregunta: 'Apoyo de mejoramiento de vivienda',
-        respuesta: formData.value.mejoramientoApoyo.map(item => item.name).join(', ')
+      pregunta: '¿Por qué no tiene recibo de agua?',
+      respuesta: formData.value.razonAgua || 'No especificado'
     });
-
-    // Preugnta 6
-    respuestas.push({ pregunta: 'Comercio en la vivienda', respuesta: formData.value.comercio });
-    if (formData.value.comercio === 'Sí') {
-    respuestas.push({ pregunta: 'Tipo de comercio', respuesta: formData.value.tipoComercio });
-    } else {
-        respuestas.push({ pregunta: 'Tipo de comercio', respuesta: null });
-    }
-
-    // Pregunta 7
+  } else {
     respuestas.push({
-        pregunta: 'Suministro de agua',
-        respuesta: formData.value.suministroAgua.map(item => item.name).join(', ')
+      pregunta: '¿Por qué no tiene recibo de agua?',
+      respuesta: null
     });
+  }
 
-    // Pregunta 8
-    respuestas.push({ pregunta: 'Total de habitantes en el hogar', respuesta: formData.value.totalHabitantes });
-    respuestas.push({ pregunta: 'Cantidad de mujeres', respuesta: formData.value.mujeres });
-    respuestas.push({ pregunta: 'Cantidad de hombres', respuesta: formData.value.hombres });
-    // Pregunta 9
+  // Pregunta 3
+  respuestas.push({
+    pregunta: 'La vivienda es',
+    respuesta: formData.value.viviendaTipo?.name || 'No especificado'  // Validación para evitar acceso a `undefined`
+  });
+
+  // Pregunta 4
+  respuestas.push({
+    pregunta: 'La vivienda cuenta con',
+    respuesta: Array.isArray(formData.value.viviendaCuentaCon)
+      ? formData.value.viviendaCuentaCon.map(item => item.name).join(', ')
+      : 'No especificado'
+  });
+
+  // Pregunta 5
+  respuestas.push({
+    pregunta: 'Apoyo de mejoramiento de vivienda',
+    respuesta: Array.isArray(formData.value.mejoramientoApoyo)
+      ? formData.value.mejoramientoApoyo.map(item => item.name).join(', ')
+      : 'No especificado'
+  });
+
+  // Pregunta 6
+  respuestas.push({
+    pregunta: 'Comercio en la vivienda',
+    respuesta: formData.value.comercio
+  });
+  if (formData.value.comercio === 'Sí') {
     respuestas.push({
-        pregunta: '¿Pertenece a algún grupo étnico?',
-        respuesta: formData.value.grupoEtnico.map(item => item.name).join(', ')
+      pregunta: 'Tipo de comercio',
+      respuesta: formData.value.tipoComercio || 'No especificado'
     });
-    // Pregunta 10
-    respuestas.push({ pregunta: '¿Habla alguna lengua indígena?', respuesta: formData.value.lenguaIndigena });
-    // Pregunta 11
-    respuestas.push({ pregunta: '¿Cuántas personas son mayores de edad?', respuesta: formData.value.mayoresEdad });
-    // Pregunta 12
-    respuestas.push({ pregunta: '¿Cuántas personas son menores de edad?', respuesta: formData.value.menoresEdad });
-    // Pregunta 13
+  } else {
     respuestas.push({
-        pregunta: '¿Reciben algún programa social?',
-        respuesta: formData.value.programaSocial.map(item => item.name).join(', ')
+      pregunta: 'Tipo de comercio',
+      respuesta: null
     });
-    // Pregunta 14
-    respuestas.push({ pregunta: '¿Identifica a los integrantes del comité de su colonia?', respuesta: formData.value.comite });
-    if (formData.value.comite === 'Sí') {
-        respuestas.push({ pregunta: 'Cargo del integrante del comité', respuesta: formData.value.comiteCargo });
-        respuestas.push({ pregunta: 'Nombre del integrante del comité', respuesta: formData.value.comiteNombre });
-    } else {
-        respuestas.push({ pregunta: 'Cargo del integrante del comité', respuesta: null });
-        respuestas.push({ pregunta: 'Nombre del integrante del comité', respuesta: null });
-    }
-    // Preugnta 15
+  }
+
+  // Pregunta 7
+  respuestas.push({
+    pregunta: 'Suministro de agua',
+    respuesta: Array.isArray(formData.value.suministroAgua)
+      ? formData.value.suministroAgua.map(item => item.name).join(', ')
+      : 'No especificado'
+  });
+
+  // Pregunta 8
+  respuestas.push({ pregunta: 'Total de habitantes en el hogar', respuesta: formData.value.totalHabitantes || 'No especificado' });
+  respuestas.push({ pregunta: 'Cantidad de mujeres', respuesta: formData.value.mujeres || 'No especificado' });
+  respuestas.push({ pregunta: 'Cantidad de hombres', respuesta: formData.value.hombres || 'No especificado' });
+
+  // Pregunta 9
+  respuestas.push({
+    pregunta: '¿Pertenece a algún grupo étnico?',
+    respuesta: Array.isArray(formData.value.grupoEtnico)
+      ? formData.value.grupoEtnico.map(item => item.name).join(', ')
+      : 'No especificado'
+  });
+
+  // Pregunta 10
+  respuestas.push({
+    pregunta: '¿Habla alguna lengua indígena?',
+    respuesta: formData.value.lenguaIndigena || 'No especificado'
+  });
+
+  // Pregunta 11
+  respuestas.push({
+    pregunta: '¿Cuántas personas son mayores de edad?',
+    respuesta: formData.value.mayoresEdad || 'No especificado'
+  });
+
+  // Pregunta 12
+  respuestas.push({
+    pregunta: '¿Cuántas personas son menores de edad?',
+    respuesta: formData.value.menoresEdad || 'No especificado'
+  });
+
+  // Pregunta 13
+  respuestas.push({
+    pregunta: '¿Reciben algún programa social?',
+    respuesta: Array.isArray(formData.value.programaSocial)
+      ? formData.value.programaSocial.map(item => item.name).join(', ')
+      : 'No especificado'
+  });
+
+  // Pregunta 14
+  respuestas.push({
+    pregunta: '¿Identifica a los integrantes del comité de su colonia?',
+    respuesta: formData.value.comite
+  });
+  if (formData.value.comite === 'Sí') {
     respuestas.push({
-        pregunta: '¿Cuáles son las principales necesidades en infraestructura?',
-        respuesta: formData.value.infraestructura.map(item => item.name).join(', ')
+      pregunta: 'Cargo del integrante del comité',
+      respuesta: formData.value.comiteCargo || 'No especificado'
     });
-
-    // Pregunta 15 - Otros
-    if (formData.value.infraestructura.some(option => option.name === 'Otros')) {
-        respuestas.push({
-        pregunta: 'Otras necesidades en infraestructura',
-        respuesta: formData.value.otrosInfraestructura
-        });
-    } else {
-        respuestas.push({
-        pregunta: 'Otras necesidades en infraestructura',
-        respuesta: null
-        });
-    }
-    // Pregunta 16
-    respuestas.push({ pregunta: '¿Considera que su colonia es segura?', respuesta: formData.value.seguroColonia });
-
-    // Pregunta 16 - porqué
-    if (formData.value.porqueInsegura) {
-        respuestas.push({ pregunta: '¿Por qué considera eso?', respuesta: formData.value.porqueInsegura });
-    }
-    //Pregunta 17 - depende del NO de la pregunta 16
-    if (formData.value.seguroColonia === 'No') {
-        respuestas.push({
-        pregunta: '¿Qué tipo de inseguridad percibe?',
-        respuesta: formData.value.inseguridadTipo.map(item => item.name).join(', ')
-        });
-    } else {
-        // Si no seleccionó "No", la pregunta 17 no aplica
-        respuestas.push({
-        pregunta: '¿Qué tipo de inseguridad percibe?',
-        respuesta: null
-        });
-    }
-
-    //Pregunta 18
-    respuestas.push({ pregunta: '¿Cuántas veces a la semana pasa el camión recolector de la basura?', respuesta: formData.value.vecesBasura });
-    // Pregunta 19
-    respuestas.push({ pregunta: '¿Cuántos días a la semana llega el servicio de agua potable?', respuesta: formData.value.diasAgua });
-    // Pregunta 20
     respuestas.push({
-        pregunta: '¿Considera que el servicio de agua potable es?',
-        respuesta: formData.value.calidadAgua.name
+      pregunta: 'Nombre del integrante del comité',
+      respuesta: formData.value.comiteNombre || 'No especificado'
     });
+  } else {
+    respuestas.push({ pregunta: 'Cargo del integrante del comité', respuesta: null });
+    respuestas.push({ pregunta: 'Nombre del integrante del comité', respuesta: null });
+  }
 
+  // Pregunta 15
+  respuestas.push({
+    pregunta: '¿Cuáles son las principales necesidades en infraestructura?',
+    respuesta: Array.isArray(formData.value.infraestructura)
+      ? formData.value.infraestructura.map(item => item.name).join(', ')
+      : 'No especificado'
+  });
+
+  // Pregunta 15 - Otros
+  if (Array.isArray(formData.value.infraestructura) && formData.value.infraestructura.some(option => option.name === 'Otros')) {
     respuestas.push({
-        pregunta: '¿Qué problemas de contaminación ha detectado?',
-        respuesta: formData.value.problemasContaminacion.map(item => item.name).join(', ')
+      pregunta: 'Otras necesidades en infraestructura',
+      respuesta: formData.value.otrosInfraestructura || 'No especificado'
     });
+  } else {
+    respuestas.push({ pregunta: 'Otras necesidades en infraestructura', respuesta: null });
+  }
 
-    // Pregunta 15 - Otros
-    if (formData.value.problemasContaminacion.some(option => option.name === 'Otros')) {
-        respuestas.push({
-        pregunta: 'Otros problemas de contaminacion',
-        respuesta: formData.value.otrosContaminacion
-        });
-    } else {
-        respuestas.push({
-        pregunta: 'Otros problemas de contaminacion',
-        respuesta: null
-        });
-    }
+  // Pregunta 16
+  respuestas.push({
+    pregunta: '¿Considera que su colonia es segura?',
+    respuesta: formData.value.seguroColonia || 'No especificado'
+  });
 
-    // Pregunta 22
-    respuestas.push({ pregunta: '¿Identifica alguna organización social en su colonia?', respuesta: formData.value.organizacionSocial });
-    if (formData.value.comite === 'Sí') {
-        respuestas.push({ pregunta: '¿Cuál es la organización social?', respuesta: formData.value.organizacionCual });
-    } else {
-        respuestas.push({ pregunta: '¿Cuál es la organización social?', respuesta: null });
-    }
-
-    // Pregunta 23
+  // Pregunta 16 - Por qué
+  if (formData.value.porqueInsegura) {
     respuestas.push({
-        pregunta: '¿Maneja algún tipo de red social?',
-        respuesta: formData.value.redSocial.map(item => item.name).join(', ')
+      pregunta: '¿Por qué considera eso?',
+      respuesta: formData.value.porqueInsegura || 'No especificado'
     });
+  }
 
-    // Pregunta 24
-    respuestas.push({ pregunta: '¿Cómo se entera de las noticias?', respuesta: formData.value.noticias });
-
-    // Pregunta 25
+  // Pregunta 17
+  if (formData.value.seguroColonia === 'No') {
     respuestas.push({
-        pregunta: '¿Está de acuerdo o en desacuerdo con el trabajo realizado por el presidente?',
-        respuesta: formData.value.trabajoPresidente.name
+      pregunta: '¿Qué tipo de inseguridad percibe?',
+      respuesta: Array.isArray(formData.value.inseguridadTipo)
+        ? formData.value.inseguridadTipo.map(item => item.name).join(', ')
+        : 'No especificado'
     });
-
-    // Pregunta 26
+  } else {
     respuestas.push({
-        pregunta: '¿Que problema debería atender más rapidamente en el municipio el presidente',
-        respuesta: formData.value.atenderProblema.name
+      pregunta: '¿Qué tipo de inseguridad percibe?',
+      respuesta: null
     });
+  }
 
-    //Observaciones
-    respuestas.push({ pregunta: 'Observaciones', respuesta: formData.value.observaciones });
+  // Pregunta 18
+  respuestas.push({
+    pregunta: '¿Cuántas veces a la semana pasa el camión recolector de la basura?',
+    respuesta: formData.value.vecesBasura || 'No especificado'
+  });
+
+  // Pregunta 19
+  respuestas.push({
+    pregunta: '¿Cuántos días a la semana llega el servicio de agua potable?',
+    respuesta: formData.value.diasAgua || 'No especificado'
+  });
+
+  // Pregunta 20
+  respuestas.push({
+    pregunta: '¿Considera que el servicio de agua potable es?',
+    respuesta: formData.value.calidadAgua?.name || 'No especificado'
+  });
+
+  // Pregunta 21
+  respuestas.push({
+    pregunta: '¿Qué problemas de contaminación ha detectado?',
+    respuesta: Array.isArray(formData.value.problemasContaminacion)
+      ? formData.value.problemasContaminacion.map(item => item.name).join(', ')
+      : 'No especificado'
+  });
+
+  // Pregunta 21 - Otros
+  if (Array.isArray(formData.value.problemasContaminacion) && formData.value.problemasContaminacion.some(option => option.name === 'Otros')) {
+    respuestas.push({
+      pregunta: 'Otros problemas de contaminación',
+      respuesta: formData.value.otrosContaminacion || 'No especificado'
+    });
+  } else {
+    respuestas.push({ pregunta: 'Otros problemas de contaminación', respuesta: null });
+  }
+
+  // Pregunta 22
+  respuestas.push({
+    pregunta: '¿Identifica alguna organización social en su colonia?',
+    respuesta: formData.value.organizacionSocial || 'No especificado'
+  });
+  if (formData.value.organizacionSocial === 'Sí') {
+    respuestas.push({
+      pregunta: '¿Cuál es la organización social?',
+      respuesta: formData.value.organizacionCual || 'No especificado'
+    });
+  } else {
+    respuestas.push({ pregunta: '¿Cuál es la organización social?', respuesta: null });
+  }
+
+  // Pregunta 23
+  respuestas.push({
+    pregunta: '¿Maneja algún tipo de red social?',
+    respuesta: Array.isArray(formData.value.redSocial)
+      ? formData.value.redSocial.map(item => item.name).join(', ')
+      : 'No especificado'
+  });
+
+  // Pregunta 24
+  respuestas.push({
+    pregunta: '¿Cómo se entera de las noticias?',
+    respuesta: formData.value.noticias || 'No especificado'
+  });
+
+  // Pregunta 25
+  respuestas.push({
+    pregunta: '¿Está de acuerdo o en desacuerdo con el trabajo realizado por el presidente?',
+    respuesta: formData.value.trabajoPresidente?.name || 'No especificado'
+  });
+
+  // Pregunta 26
+  respuestas.push({
+    pregunta: '¿Qué problema debería atender más rápidamente en el municipio el presidente?',
+    respuesta: formData.value.atenderProblema?.name || 'No especificado'
+  });
+
+  // Observaciones
+  respuestas.push({
+    pregunta: 'Observaciones',
+    respuesta: formData.value.observaciones || 'No especificado'
+  });
 
   return respuestas;
 }
+
 
 async function guardarEntrevista() {
   const respuestas = formatearRespuestas();  // Obtener las respuestas formateadas
@@ -447,9 +542,9 @@ async function guardarEntrevista() {
     numero_telefono: formData.value.numeroTelefono,
     nacionalidad: formData.value.nacionalidad,
     sexo: formData.value.sexo,
-    edad: parseInt(formData.value.edad, 10),
+    edad: formData.value.edad ? parseInt(formData.value.edad, 10) : null,  // Validar edad antes de convertirla
     direccion: formData.value.direccion,
-    tipo_asentamiento: formData.value.tipoAsentamiento.name,
+    tipo_asentamiento: formData.value.tipoAsentamiento?.name || 'No especificado',  // Validar que existe
     fecha_hora: new Date().toISOString(),  // Generar la fecha y hora actual en formato ISO
     respuestas: respuestas  // Insertar las respuestas en el campo correcto
   };
@@ -457,11 +552,22 @@ async function guardarEntrevista() {
   // Mostrar el JSON en la consola
   console.log("Payload enviado:", JSON.stringify(payload, null, 2));
 
+  if (!token.value) {
+    console.error('No hay token disponible. No se puede enviar la solicitud.');
+    toast.value.add({
+      severity: 'error',
+      summary: 'Error',
+      detail: 'No hay token de autenticación disponible. Por favor, inicie sesión.',
+      life: 3000
+    });
+    return;
+  }
+
   try {
     const url = 'https://encuestas-municipio.onrender.com/encuestas/create';
     const response = await axios.post(url, payload, {
       headers: {
-        'Authorization': `Bearer ${token.value}`,
+        'Authorization': `Bearer ${token.value}`,  // Usar el token JWT
         'Content-Type': 'application/json'
       }
     });
@@ -475,13 +581,24 @@ async function guardarEntrevista() {
         life: 3000
       });
       resetForm();
+    } else {
+      // Manejo adicional si el código de estado no es 200
+      console.error('Respuesta inesperada al guardar la entrevista:', response);
+      toast.value.add({
+        severity: 'warn',
+        summary: 'Advertencia',
+        detail: 'La entrevista se guardó, pero hubo una respuesta inesperada.',
+        life: 3000
+      });
     }
   } catch (error) {
-    console.error('Error al guardar la entrevista:', error.response ? error.response.data : error);
+    console.error('Error al guardar la entrevista:', error.response ? error.response.data : error.message);
+
+    // Mostrar notificación de error con detalles
     toast.value.add({
       severity: 'error',
       summary: 'Error',
-      detail: 'Hubo un problema al guardar la entrevista.',
+      detail: `Hubo un problema al guardar la entrevista: ${error.response?.data?.detail || error.message}`,
       life: 3000
     });
   }
