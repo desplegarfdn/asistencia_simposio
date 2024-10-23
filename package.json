@@ -2,9 +2,10 @@
     "name": "sakai-vue",
     "version": "3.8.0",
     "scripts": {
-        "dev": "node_modules/.bin/vite",
-        "build": "node_modules/.bin/vite build",
-        "preview": "node_modules/.bin/vite preview",
+        "prebuild": "npm install -g vite",
+        "build": "vite build",
+        "dev": "vite",
+        "preview": "vite preview",
         "lint": "eslint . --ext .vue,.js,.jsx,.cjs,.mjs --fix --ignore-path .gitignore"
     },
     "dependencies": {
