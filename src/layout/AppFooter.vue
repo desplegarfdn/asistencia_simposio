@@ -1,19 +1,25 @@
 <script setup>
 import { useLayout } from '@/layout/composables/layout';
 import { computed } from 'vue';
+import logoImage from '@/assets/logo_2.png'; // Importa la imagen
 
 const { layoutConfig } = useLayout();
 
 const logoUrl = computed(() => {
-    return `dist/demo/images/galleria/logo.png`;
+  return logoImage; // Usa la imagen importada directamente
 });
 </script>
 
 <template>
-    <div class="layout-footer">
-        <img :src="logoUrl" alt="Logo" height="20" class="mr-2" />
-        by
-        <span class="font-medium ml-2">Ruba</span>
-    </div>
+  <div class="layout-footer">
+    <img :src="logoUrl" alt="Logo" class="logo-image" />
+    <span class="font-medium ml-2">Secretaría del Bienestar</span>
+  </div>
 </template>
-<style lang="scss" scoped></style>
+
+<style lang="scss" scoped>
+.logo-image {
+  width: 60px; /* Ajusta el ancho */
+  height: auto; /* Mantiene la proporción automáticamente */
+}
+</style>

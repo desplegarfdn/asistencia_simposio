@@ -2,6 +2,7 @@
 import { ref, computed, onMounted, onBeforeUnmount } from 'vue';
 import { useLayout } from '@/layout/composables/layout';
 import { useRouter } from 'vue-router';
+import logoImage from '@/assets/logo_1.png'; // Importa la imagen directamente
 
 const { layoutConfig, onMenuToggle } = useLayout();
 
@@ -10,87 +11,83 @@ const topbarMenuActive = ref(false);
 const router = useRouter();
 
 onMounted(() => {
-    bindOutsideClickListener();
+  bindOutsideClickListener();
 });
 
 onBeforeUnmount(() => {
-    unbindOutsideClickListener();
+  unbindOutsideClickListener();
 });
 
 const logoUrl = computed(() => {
-    return `src/assets/logo_1.png`;
+  return logoImage; // Usar la imagen importada
 });
 
 const onTopBarMenuButton = () => {
-    //Aqui va la ruta del chatBOT
-    topbarMenuActive.value = false;
-    router.push('/ChatBOT');
-    //router.push('/documentation');
+  topbarMenuActive.value = false;
+  router.push('/ChatBOT');
 };
 const onSettingsClick = () => {
-    topbarMenuActive.value = false;
-    router.push('/documentation');
+  topbarMenuActive.value = false;
+  router.push('/documentation');
 };
 const topbarMenuClasses = computed(() => {
-    return {
-        'layout-topbar-menu-mobile-active': topbarMenuActive.value
-    };
+  return {
+    'layout-topbar-menu-mobile-active': topbarMenuActive.value
+  };
 });
 
 const bindOutsideClickListener = () => {
-    if (!outsideClickListener.value) {
-        outsideClickListener.value = (event) => {
-            if (isOutsideClicked(event)) {
-                topbarMenuActive.value = false;
-            }
-        };
-        document.addEventListener('click', outsideClickListener.value);
-    }
+  if (!outsideClickListener.value) {
+    outsideClickListener.value = (event) => {
+      if (isOutsideClicked(event)) {
+        topbarMenuActive.value = false;
+      }
+    };
+    document.addEventListener('click', outsideClickListener.value);
+  }
 };
 const unbindOutsideClickListener = () => {
-    if (outsideClickListener.value) {
-        document.removeEventListener('click', outsideClickListener);
-        outsideClickListener.value = null;
-    }
+  if (outsideClickListener.value) {
+    document.removeEventListener('click', outsideClickListener);
+    outsideClickListener.value = null;
+  }
 };
 const isOutsideClicked = (event) => {
-    if (!topbarMenuActive.value) return;
+  if (!topbarMenuActive.value) return;
 
-    const sidebarEl = document.querySelector('.layout-topbar-menu');
-    const topbarEl = document.querySelector('.layout-topbar-menu-button');
+  const sidebarEl = document.querySelector('.layout-topbar-menu');
+  const topbarEl = document.querySelector('.layout-topbar-menu-button');
 
-    return !(sidebarEl.isSameNode(event.target) || sidebarEl.contains(event.target) || topbarEl.isSameNode(event.target) || topbarEl.contains(event.target));
+  return !(sidebarEl.isSameNode(event.target) || sidebarEl.contains(event.target) || topbarEl.isSameNode(event.target) || topbarEl.contains(event.target));
 };
 </script>
 
 <template>
-    <div class="layout-topbar" >
-        <router-link to="/" class="layout-topbar-logo" >
-            <img :src="logoUrl" alt="logo" />
-            <span class="texto-blanco">Secretaría del Bienestar Municipal</span>
-            
-        </router-link>
+  <div class="layout-topbar">
+    <router-link to="/" class="layout-topbar-logo">
+      <img :src="logoUrl" alt="logo" />
+      <span class="texto-blanco">Secretaría del Bienestar Municipal</span>
+    </router-link>
 
-        <button class="p-link layout-menu-button layout-topbar-button" @click="onMenuToggle()"  style="color: white;">
-            <i class="pi pi-bars"></i>
-        </button>
+    <button class="p-link layout-menu-button layout-topbar-button" @click="onMenuToggle()" style="color: white;">
+      <i class="pi pi-bars"></i>
+    </button>
 
-        <button class="p-link layout-topbar-menu-button layout-topbar-button" @click="onTopBarMenuButton()" style="color: white;">
-            <i class="pi pi-ellipsis-v"></i>
-        </button>
+    <button class="p-link layout-topbar-menu-button layout-topbar-button" @click="onTopBarMenuButton()" style="color: white;">
+      <i class="pi pi-ellipsis-v"></i>
+    </button>
 
-        <div class="layout-topbar-menu" :class="topbarMenuClasses">
-
-        </div>
-    </div>
+    <div class="layout-topbar-menu" :class="topbarMenuClasses"></div>
+  </div>
 </template>
 
 <style lang="scss" scoped>
 .layout-topbar {
-    background-color: #800040;
+  background-color: #800040;
 }
 
 .texto-blanco {
-    color: white;
-  }
+  color: white;
+}
 </style>
+
