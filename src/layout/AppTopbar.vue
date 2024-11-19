@@ -2,12 +2,13 @@
 import { ref, computed, onMounted, onBeforeUnmount } from 'vue';
 import { useLayout } from '@/layout/composables/layout';
 import { useRouter } from 'vue-router';
-import logoImage from '@/assets/logo_1.png'; // Importa la imagen directamente
+import logoImage from '@/assets/logo_1.png';
+import UserProfile from '@/layout/UserProfile.vue'; // Importa el componente
 
 const { layoutConfig, onMenuToggle } = useLayout();
-
 const outsideClickListener = ref(null);
 const topbarMenuActive = ref(false);
+const userMenuActive = ref(false);
 const router = useRouter();
 
 onMounted(() => {
@@ -18,76 +19,124 @@ onBeforeUnmount(() => {
   unbindOutsideClickListener();
 });
 
-const logoUrl = computed(() => {
-  return logoImage; // Usar la imagen importada
-});
+const logoUrl = computed(() => logoImage);
 
-const onTopBarMenuButton = () => {
-  topbarMenuActive.value = false;
-  router.push('/ChatBOT');
+const toggleUserMenu = () => {
+  userMenuActive.value = !userMenuActive.value;
 };
-const onSettingsClick = () => {
-  topbarMenuActive.value = false;
-  router.push('/documentation');
+
+const logout = () => {
+  localStorage.removeItem('access_token');
+  router.push('/');
 };
-const topbarMenuClasses = computed(() => {
-  return {
-    'layout-topbar-menu-mobile-active': topbarMenuActive.value
-  };
-});
 
 const bindOutsideClickListener = () => {
   if (!outsideClickListener.value) {
     outsideClickListener.value = (event) => {
       if (isOutsideClicked(event)) {
-        topbarMenuActive.value = false;
+        userMenuActive.value = false;
       }
     };
     document.addEventListener('click', outsideClickListener.value);
   }
 };
+
 const unbindOutsideClickListener = () => {
   if (outsideClickListener.value) {
-    document.removeEventListener('click', outsideClickListener);
+    document.removeEventListener('click', outsideClickListener.value);
     outsideClickListener.value = null;
   }
 };
+
 const isOutsideClicked = (event) => {
-  if (!topbarMenuActive.value) return;
+  if (!userMenuActive.value) return;
 
-  const sidebarEl = document.querySelector('.layout-topbar-menu');
-  const topbarEl = document.querySelector('.layout-topbar-menu-button');
+  const userMenuEl = document.querySelector('.user-menu');
+  const userButtonEl = document.querySelector('.user-menu-button');
 
-  return !(sidebarEl.isSameNode(event.target) || sidebarEl.contains(event.target) || topbarEl.isSameNode(event.target) || topbarEl.contains(event.target));
+  return !(
+    (userMenuEl && (userMenuEl.isSameNode(event.target) || userMenuEl.contains(event.target))) ||
+    (userButtonEl && (userButtonEl.isSameNode(event.target) || userButtonEl.contains(event.target)))
+  );
 };
 </script>
 
 <template>
   <div class="layout-topbar">
-    <router-link to="/" class="layout-topbar-logo">
-      <img :src="logoUrl" alt="logo" />
-      <span class="texto-blanco">Secretaría del Bienestar Municipal</span>
-    </router-link>
+    <!-- Sección izquierda: Logo + Menú -->
+    <div class="left-section">
+      <router-link to="/" class="layout-topbar-logo">
+        <img :src="logoUrl" alt="logo" />
+        <span class="texto-blanco">Secretaría del Bienestar Municipal</span>
+      </router-link>
+      <button class="p-link layout-menu-button layout-topbar-button" @click="onMenuToggle()" style="color: white;">
+        <i class="pi pi-bars"></i>
+      </button>
+    </div>
 
-    <button class="p-link layout-menu-button layout-topbar-button" @click="onMenuToggle()" style="color: white;">
-      <i class="pi pi-bars"></i>
-    </button>
-
-    <button class="p-link layout-topbar-menu-button layout-topbar-button" @click="onTopBarMenuButton()" style="color: white;">
-      <i class="pi pi-ellipsis-v"></i>
-    </button>
-
-    <div class="layout-topbar-menu" :class="topbarMenuClasses"></div>
+    <!-- Sección derecha: Usuario + Cerrar sesión -->
+    <div class="right-section">
+      <button class="p-link layout-topbar-button user-menu-button" @click="toggleUserMenu" style="color: white;">
+        <i class="pi pi-user"></i>
+      </button>
+      <div class="user-menu" v-if="userMenuActive">
+        <UserProfile /> <!-- Carga el perfil del usuario dentro del menú -->
+      </div>
+    </div>
   </div>
 </template>
 
 <style lang="scss" scoped>
 .layout-topbar {
   background-color: #800040;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 0 1rem;
 }
 
 .texto-blanco {
   color: white;
 }
-</style>
 
+.left-section {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+.right-section {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+  position: relative;
+}
+
+.user-menu {
+  position: absolute;
+  top: 100%;
+  right: 0;
+  background-color: white;
+  border: 1px solid #ddd;
+  border-radius: 4px;
+  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2);
+  padding: 1rem;
+  z-index: 100;
+}
+
+.logout-button {
+  width: 100%;
+  padding: 0.5rem;
+  background-color: #800040;
+  color: white;
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+  text-align: center;
+  margin-top: 1rem;
+}
+
+.logout-button:hover {
+  background-color: #9c004d;
+}
+</style>

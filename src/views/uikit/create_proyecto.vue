@@ -66,6 +66,7 @@ const formData = ref({
     noticias: null,
     trabajoPresidente: null,
     atenderProblema: null,
+    mayoresDe10AnosNoSabenLeer: null,
     observaciones: null
 });
 
@@ -517,6 +518,13 @@ function formatearRespuestas() {
     respuesta: formData.value.atenderProblema?.name || 'No especificado'
   });
 
+  //Pregunta 27
+
+  respuestas.push({
+    pregunta: '¿Cuántas personas mayores de 10 años que viven en este hogar, no saben leer y escribir?',
+    respuesta: formData.value.mayoresDe10AnosNoSabenLeer || 'No especificado'
+  });
+
   // Observaciones
   respuestas.push({
     pregunta: 'Observaciones',
@@ -658,6 +666,7 @@ function resetForm() {
         noticias: null,
         trabajoPresidente: null,
         atenderProblema: null,
+        mayoresDe10AnosNoSabenLeer: null,
         observaciones: null
     };
 }
@@ -1073,6 +1082,12 @@ function resetForm() {
             <div class="flex flex-col gap-2 mt-4">
                 <label class="font-semibold text-lg">26.- ¿Que problema debería atender más rapidamente en el municipio el presidente Yamil Melgabr Bravo?</label>
                 <Dropdown v-model="formData.atenderProblema" :options="problemasOptions" optionLabel="name" placeholder="Seleccione una opción" class="w-full" />
+            </div>
+
+            <!-- Pregunta 27 -->
+            <div class="flex flex-col gap-2 mt-4">
+                <label class="font-semibold text-lg">27.- ¿Cuántas personas mayores de 10 años que viven en este hogar, no saben leer y escribir?</label>
+                <InputText type="number" v-model="formData.mayoresDe10AnosNoSabenLeer" placeholder="Ingrese un número" class="w-full p-2 border rounded-md" />
             </div>
 
             <!-- Observaciones -->
