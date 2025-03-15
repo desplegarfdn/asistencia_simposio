@@ -3,152 +3,172 @@ import { ref, onMounted } from 'vue';
 import axios from 'axios';
 
 const nombreCompleto = ref('');
-const ultimoFolio = ref('Sin información');
-const totalEncuestas = ref(0);
+const totalAsistenciaCarrera = ref([]);
+const asistenciaGenero = ref({ total_hombres: 0, total_mujeres: 0 });
+const tiempoReal = ref(0);
 
 // Obtener token JWT desde localStorage
 const obtenerToken = () => localStorage.getItem('access_token');
 
 // Función para obtener los datos del usuario
 const obtenerUsuario = async () => {
-  try {
-    const token = obtenerToken();
-    const response = await axios.get('https://encuestas-municipio.onrender.com/auth/usuarios/me', {
-      headers: {
-        Authorization: `Bearer ${token}`,
-      },
-    });
+    try {
+        const token = obtenerToken();
+        const response = await axios.get('http://127.0.0.1:8000/auth/user/me', {
+            headers: {
+                Authorization: `Bearer ${token}`
+            }
+        });
 
-    const { nombre, username } = response.data;
-    nombreCompleto.value = `${nombre} ` || username;
+        const { nombre, username } = response.data;
+        nombreCompleto.value = `${nombre} ` || username;
 
-    // Obtener los datos relacionados con el usuario
-    await obtenerUltimoFolio(username, token);
-    await obtenerTotalEncuestas(username, token);
-  } catch (error) {
-    console.error('Error al obtener el usuario:', error);
-    nombreCompleto.value = 'Usuario desconocido';
-  }
+        // Obtener los datos de asistencia
+        await obtenerAsistenciaPorCarrera(token);
+        await obtenerAsistenciaPorGenero(token);
+        await obtenerTiempoReal(token);
+    } catch (error) {
+        console.error('Error al obtener el usuario:', error);
+        nombreCompleto.value = 'Usuario desconocido';
+    }
 };
 
-// Función para obtener el último folio registrado
-const obtenerUltimoFolio = async (username, token) => {
-  try {
-    const response = await axios.get(`https://encuestas-municipio.onrender.com/acciones/ultimo_folio/${username}`, {
-      headers: {
-        Authorization: `Bearer ${token}`,
-      },
-    });
-    ultimoFolio.value = response.data || 'Sin información';
-  } catch (error) {
-    console.error('Error al obtener el último folio:', error);
-    ultimoFolio.value = 'Error al cargar';
-  }
+// 📊 Obtener el total de asistentes por carrera
+const obtenerAsistenciaPorCarrera = async (token) => {
+    try {
+        const response = await axios.get('http://127.0.0.1:8000/asistencia/reporte/total-carrera', {
+            headers: {
+                Authorization: `Bearer ${token}`
+            }
+        });
+        totalAsistenciaCarrera.value = response.data;
+    } catch (error) {
+        console.error('Error al obtener asistencia por carrera:', error);
+        totalAsistenciaCarrera.value = [];
+    }
 };
 
-// Función para obtener el total de encuestas registradas
-const obtenerTotalEncuestas = async (username, token) => {
-  try {
-    const response = await axios.get(`https://encuestas-municipio.onrender.com/acciones/contador/${username}`, {
-      headers: {
-        Authorization: `Bearer ${token}`,
-      },
-    });
-    totalEncuestas.value = response.data || 0;
-  } catch (error) {
-    console.error('Error al obtener el total de encuestas:', error);
-    totalEncuestas.value = 'Error al cargar';
-  }
+// 📊 Obtener la asistencia por género (Hombres y Mujeres)
+const obtenerAsistenciaPorGenero = async (token) => {
+    try {
+        const response = await axios.get('http://127.0.0.1:8000/asistencia/reporte/genero', {
+            headers: {
+                Authorization: `Bearer ${token}`
+            }
+        });
+        asistenciaGenero.value = response.data;
+    } catch (error) {
+        console.error('Error al obtener asistencia por género:', error);
+        asistenciaGenero.value = { total_hombres: 0, total_mujeres: 0 };
+    }
+};
+
+// 📊 Obtener asistentes en tiempo real
+const obtenerTiempoReal = async (token) => {
+    try {
+        const response = await axios.get('http://127.0.0.1:8000/asistencia/reporte/tiempo-real', {
+            headers: {
+                Authorization: `Bearer ${token}`
+            }
+        });
+        tiempoReal.value = response.data.total_asistentes;
+    } catch (error) {
+        console.error('Error al obtener asistentes en tiempo real:', error);
+        tiempoReal.value = 0;
+    }
 };
 
 // Cargar datos al montar el componente
 onMounted(() => {
-  obtenerUsuario();
+    obtenerUsuario();
 });
 </script>
 
 <template>
-  <div class="dashboard">
-    <!-- Mensaje de bienvenida -->
-    <div class="welcome">
-      <h1>¡ Bienvenido/a, {{ nombreCompleto }}!</h1>
-      <h2>Sistema de Encuestas de la Secretaría del Bienestar Municipal</h2>
-    </div>
-
-    <!-- Recuadros -->
-    <div class="grid">
-      <div class="card large-card">
-        <div class="flex justify-content-between mb-3">
-          <div>
-            <span class="block text-500 font-medium mb-3">Último folio registrado</span>
-            <div class="text-900 font-medium text-2xl">{{ ultimoFolio }}</div>
-          </div>
-          <div class="flex align-items-center justify-content-center bg-blue-100 border-round" style="width: 3.5rem; height: 3.5rem">
-            <i class="pi pi-folder text-blue-500 text-3xl"></i>
-          </div>
+    <div class="dashboard">
+        <!-- Mensaje de bienvenida -->
+        <div class="welcome">
+            <h1>¡Bienvenido/a, {{ nombreCompleto }}!</h1>
+            <h2>Panel de Estadísticas de Asistencia - Simposio Internacional</h2>
         </div>
-      </div>
 
-      <div class="card large-card">
-        <div class="flex justify-content-between mb-3">
-          <div>
-            <span class="block text-500 font-medium mb-3">Total de encuestas registradas</span>
-            <div class="text-900 font-medium text-2xl">{{ totalEncuestas }}</div>
-          </div>
-          <div class="flex align-items-center justify-content-center bg-cyan-100 border-round" style="width: 3.5rem; height: 3.5rem">
-            <i class="pi pi-chart-bar text-cyan-500 text-3xl"></i>
-          </div>
+        <!-- Tarjetas con reportes -->
+        <div class="grid">
+            <!-- 🔹 Total asistentes por carrera -->
+            <div class="card large-card">
+                <h3>Asistencia por Carrera</h3>
+                <ul v-if="totalAsistenciaCarrera.length">
+                    <li v-for="carrera in totalAsistenciaCarrera" :key="carrera.carrera">
+                        <strong>{{ carrera.carrera }}</strong
+                        >: {{ carrera.total_asistentes }} asistentes
+                    </li>
+                </ul>
+                <p v-else>Cargando datos...</p>
+            </div>
+
+            <!-- 🔹 Asistencia por género -->
+            <div class="card large-card">
+                <h3>Asistencia por Género</h3>
+                <p><strong>Hombres:</strong> {{ asistenciaGenero.total_hombres }}</p>
+                <p><strong>Mujeres:</strong> {{ asistenciaGenero.total_mujeres }}</p>
+            </div>
+
+            <!-- 🔹 Asistentes en tiempo real -->
+            <div class="card large-card">
+                <h3>Asistentes en Tiempo Real</h3>
+                <p class="text-large">{{ tiempoReal }}</p>
+            </div>
         </div>
-      </div>
     </div>
-  </div>
 </template>
 
 <style scoped>
+/* 🔹 Contenedor principal */
 .dashboard {
-  padding: 2rem;
+    padding: 2rem;
+    text-align: center;
 }
 
-.welcome {
-  text-align: center;
-  margin-bottom: 3rem; /* Incrementa el espacio debajo del mensaje de bienvenida */
-}
-
+/* 🔹 Mensaje de bienvenida */
 .welcome h1 {
-  font-size: 6rem;
-  font-weight: bold;
-  color: #800040;
+    font-size: 2.5rem;
+    font-weight: bold;
+    color: #003366; /* Azul UNACH */
 }
 
 .welcome h2 {
-  font-size: 3rem;
-  font-weight: 400;
-  color: #333;
+    font-size: 1.5rem;
+    font-weight: 400;
+    color: #c9a227; /* Dorado UNACH */
 }
 
+/* 🔹 Diseño de tarjetas */
 .grid {
-  display: flex; /* Usamos flexbox */
-  flex-direction: column; /* Alineamos en columna */
-  justify-content: center; /* Centra verticalmente si hay más espacio */
-  align-items: center; /* Centra horizontalmente */
-  gap: 1rem; /* Espacio entre las tarjetas */
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    gap: 1.5rem;
+    margin-top: 1.5rem;
 }
 
 .large-card {
-  padding: 2rem; /* Aumenta el padding interno */
-  border-radius: 15px;
-  background: white;
-  box-shadow: 0px 4px 15px rgba(0, 0, 0, 0.1);
-  text-align: center;
-  width: 350px; /* Haz la tarjeta más ancha */
-  height: 150px; /* Haz la tarjeta más alta */
+    padding: 1.5rem;
+    border-radius: 10px;
+    background: white;
+    box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.15);
+    text-align: center;
+    width: 350px;
 }
 
-.large-card .block {
-  font-size: 1.2rem;
+h3 {
+    color: #003366;
+    margin-bottom: 1rem;
 }
 
-.large-card .text-2xl {
-  font-size: 2rem;
+/* 🔹 Texto dentro de las tarjetas */
+.text-large {
+    font-size: 2.5rem;
+    font-weight: bold;
+    color: #c9a227;
 }
 </style>
