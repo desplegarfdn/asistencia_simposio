@@ -4,24 +4,24 @@ import vue from '@vitejs/plugin-vue';
 
 export default defineConfig(() => {
     return {
-        base: '/', // 🔹 Importante para Render y evitar errores 404 en rutas
+        base: '/', // 🔹 Define la base correctamente
 
         plugins: [vue()],
 
         resolve: {
             alias: {
-                '@': '/src'
+                '@': fileURLToPath(new URL('./src', import.meta.url)) // 🔹 Asegura la ruta absoluta
             }
         },
 
         build: {
-            outDir: 'dist', // 🔹 Render usa `dist/` como carpeta pública
-            chunkSizeWarningLimit: 2000 // Ajusta el límite a 2000 KB (2 MB)
+            outDir: 'dist', // 🔹 Render usa `dist/`
+            chunkSizeWarningLimit: 2000
         },
 
         server: {
-            port: 5173, // Opcional: Puedes cambiarlo si es necesario
-            historyApiFallback: true // 🔹 Evita errores 404 en rutas anidadas
+            port: 5173, // Opcional: solo afecta en local
+            strictPort: true // 🔹 Evita conflictos de puertos
         }
     };
 });
