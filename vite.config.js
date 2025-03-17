@@ -10,7 +10,7 @@ export default defineConfig(() => {
 
         resolve: {
             alias: {
-                '@': fileURLToPath(new URL('./src', import.meta.url))
+                '@': '/src'
             }
         },
 
@@ -20,7 +20,7 @@ export default defineConfig(() => {
         },
 
         server: {
-            port: 3000, // Opcional: Puedes cambiarlo si es necesario
+            port: 5173, // Opcional: Puedes cambiarlo si es necesario
             historyApiFallback: true // 🔹 Evita errores 404 en rutas anidadas
         }
     };
