@@ -4,7 +4,7 @@ import vue from '@vitejs/plugin-vue';
 
 export default defineConfig(() => {
     return {
-        base: '/', // 🔹 Define la base correctamente
+        base: './', // 🔹 Define la base correctamente
 
         plugins: [vue()],
 
