@@ -145,14 +145,27 @@ const router = createRouter({
 });
 
 // **Protección de rutas con `beforeEach`**
-router.beforeEach((to, from, next) => {
-    if (to.meta.requiresAuth && !isAuthenticated()) {
-        next('/');
-    } else if (to.meta.requiresAdmin && getUserRole() !== 'admin') {
-        next('/dashboard'); // Redirige a usuarios sin permisos al Dashboard
-    } else {
-        next();
+router.beforeEach(async (to, from, next) => {
+    const isAuth = isAuthenticated();
+    const userRole = getUserRole();
+
+    // 🔹 Permitir siempre acceder a login y no redirigir automáticamente
+    if (to.name === 'login') {
+        return next();
     }
+
+    // 🔹 Si la ruta requiere autenticación y el usuario NO está autenticado
+    if (to.meta.requiresAuth && !isAuth) {
+        return next('/');
+    }
+
+    // 🔹 Si la ruta requiere ser admin y el usuario no es admin
+    if (to.meta.requiresAdmin && userRole !== 'admin') {
+        return next('/dashboard');
+    }
+
+    next();
 });
+
 
 export default router;
