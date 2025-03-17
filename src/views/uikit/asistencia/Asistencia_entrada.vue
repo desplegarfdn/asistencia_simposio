@@ -21,7 +21,7 @@ const sendAttendance = async () => {
 
         // 🔹 Enviar solicitud al backend
         await axios.post(
-            'http://127.0.0.1:8000/asistencia/entrada',
+            'https://asistenciasimposio-api.onrender.com/asistencia/entrada',
             {},
             {
                 params: { persona_id: scannedId.value.trim() },

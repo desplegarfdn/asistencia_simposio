@@ -28,7 +28,7 @@ const buscarUsuario = async () => {
     usuario.value = null;
 
     try {
-        const response = await axios.get(`http://127.0.0.1:8000/usuarios/buscar/${username.value.trim()}`, {
+        const response = await axios.get(`https://asistenciasimposio-api.onrender.com/usuarios/buscar/${username.value.trim()}`, {
             headers: { Authorization: `Bearer ${token}` }
         });
 
@@ -75,7 +75,7 @@ const eliminarUsuario = async () => {
     loading.value = true;
 
     try {
-        await axios.delete(`http://127.0.0.1:8000/usuarios/eliminar/${username.value.trim()}`, {
+        await axios.delete(`https://asistenciasimposio-api.onrender.com/usuarios/eliminar/${username.value.trim()}`, {
             headers: { Authorization: `Bearer ${token}` }
         });
 

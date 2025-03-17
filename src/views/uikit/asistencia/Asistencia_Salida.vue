@@ -22,7 +22,7 @@ const processScan = async () => {
         // 🔹 Intentar registrar salida primero
         try {
             await axios.post(
-                'http://127.0.0.1:8000/asistencia/salida',
+                'https://asistenciasimposio-api.onrender.com/asistencia/salida',
                 {},
                 {
                     params: { persona_id: scannedId.value.trim() },
@@ -39,7 +39,7 @@ const processScan = async () => {
             if (error.response?.status === 404) {
                 // 🔹 Si el backend responde con 404, significa que NO había entrada, entonces registramos la entrada
                 await axios.post(
-                    'http://127.0.0.1:8000/asistencia/entrada',
+                    'https://asistenciasimposio-api.onrender.com/asistencia/entrada',
                     {},
                     {
                         params: { persona_id: scannedId.value.trim() },

@@ -47,7 +47,7 @@ const registrarMaestro = async () => {
     loading.value = true;
 
     try {
-        const response = await axios.post('http://127.0.0.1:8000/crear', formData.value, {
+        const response = await axios.post('https://asistenciasimposio-api.onrender.com/crear', formData.value, {
             headers: {
                 Authorization: `Bearer ${token}`,
                 'Content-Type': 'application/json'

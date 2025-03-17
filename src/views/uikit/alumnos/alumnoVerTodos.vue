@@ -15,7 +15,7 @@ const search = ref('');
 const obtenerAlumnos = async () => {
     loading.value = true;
     try {
-        const response = await axios.get('http://127.0.0.1:8000/alumnos/todos', {
+        const response = await axios.get('https://asistenciasimposio-api.onrender.com/alumnos/todos', {
             headers: { Authorization: `Bearer ${token}` }
         });
 

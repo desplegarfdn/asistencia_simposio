@@ -44,7 +44,7 @@ const registrarUsuario = async () => {
 
     loading.value = true; // Mostrar estado de carga
     try {
-        const response = await axios.post('http://127.0.0.1:8000/usuarios/crear', formData.value, {
+        const response = await axios.post('https://asistenciasimposio-api.onrender.com/usuarios/crear', formData.value, {
             headers: {
                 Authorization: `Bearer ${token}`,
                 'Content-Type': 'application/json'

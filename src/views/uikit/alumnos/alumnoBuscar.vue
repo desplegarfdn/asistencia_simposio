@@ -21,7 +21,7 @@ const buscarAlumno = async () => {
     alumno.value = null;
 
     try {
-        const response = await axios.get(`http://127.0.0.1:8000/alumnos/busqueda/${matricula.value.trim()}`, {
+        const response = await axios.get(`https://asistenciasimposio-api.onrender.com/alumnos/busqueda/${matricula.value.trim()}`, {
             headers: { Authorization: `Bearer ${token}` }
         });
 

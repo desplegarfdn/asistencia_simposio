@@ -35,25 +35,25 @@ const obtenerReporte = async (tipo) => {
 
     switch (tipo) {
         case 'diaCarrera':
-            url = `http://127.0.0.1:8000/asistencia/reporte/dia-carrera`;
+            url = `https://asistenciasimposio-api.onrender.com/asistencia/reporte/dia-carrera`;
             params = { fecha: fecha.value, carrera: carrera.value };
             break;
         case 'totalCarrera':
-            url = `http://127.0.0.1:8000/asistencia/reporte/total-carrera`;
+            url = `https://asistenciasimposio-api.onrender.com/asistencia/reporte/total-carrera`;
             break;
         case 'diaGeneral':
-            url = `http://127.0.0.1:8000/asistencia/reporte/dia-general`;
+            url = `https://asistenciasimposio-api.onrender.com/asistencia/reporte/dia-general`;
             params = { fecha: fecha.value };
             break;
         case 'general3Dias':
-            url = `http://127.0.0.1:8000/asistencia/reporte/general-3dias`;
+            url = `https://asistenciasimposio-api.onrender.com/asistencia/reporte/general-3dias`;
             params = { fecha_inicio: fechaInicio.value, fecha_fin: fechaFin.value };
             break;
         case 'genero':
-            url = `http://127.0.0.1:8000/asistencia/reporte/genero`;
+            url = `https://asistenciasimposio-api.onrender.com/asistencia/reporte/genero`;
             break;
         case 'tiempoReal':
-            url = `http://127.0.0.1:8000/asistencia/reporte/tiempo-real`;
+            url = `https://asistenciasimposio-api.onrender.com/asistencia/reporte/tiempo-real`;
             params = carrera.value ? { carrera: carrera.value } : {};
             break;
     }

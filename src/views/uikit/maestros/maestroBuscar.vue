@@ -21,7 +21,7 @@ const buscarMaestro = async () => {
     maestro.value = null;
 
     try {
-        const response = await axios.get(`http://127.0.0.1:8000/maestros/buscar/${numeroPlaza.value.trim()}`, {
+        const response = await axios.get(`https://asistenciasimposio-api.onrender.com/maestros/buscar/${numeroPlaza.value.trim()}`, {
             headers: { Authorization: `Bearer ${token}` }
         });
 

@@ -50,7 +50,7 @@ const registrarAlumno = async () => {
     loading.value = true;
 
     try {
-        await axios.post('http://127.0.0.1:8000/alumnos/crear', formData.value, {
+        await axios.post('https://asistenciasimposio-api.onrender.com/alumnos/crear', formData.value, {
             headers: {
                 Authorization: `Bearer ${token}`,
                 'Content-Type': 'application/json'

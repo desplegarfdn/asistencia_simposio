@@ -14,7 +14,7 @@ const obtenerToken = () => localStorage.getItem('access_token');
 const obtenerUsuario = async () => {
     try {
         const token = obtenerToken();
-        const response = await axios.get('http://127.0.0.1:8000/auth/user/me', {
+        const response = await axios.get('https://asistenciasimposio-api.onrender.com/auth/user/me', {
             headers: {
                 Authorization: `Bearer ${token}`
             }
@@ -36,7 +36,7 @@ const obtenerUsuario = async () => {
 // 📊 Obtener el total de asistentes por carrera
 const obtenerAsistenciaPorCarrera = async (token) => {
     try {
-        const response = await axios.get('http://127.0.0.1:8000/asistencia/reporte/total-carrera', {
+        const response = await axios.get('https://asistenciasimposio-api.onrender.com/asistencia/reporte/total-carrera', {
             headers: {
                 Authorization: `Bearer ${token}`
             }
@@ -51,7 +51,7 @@ const obtenerAsistenciaPorCarrera = async (token) => {
 // 📊 Obtener la asistencia por género (Hombres y Mujeres)
 const obtenerAsistenciaPorGenero = async (token) => {
     try {
-        const response = await axios.get('http://127.0.0.1:8000/asistencia/reporte/genero', {
+        const response = await axios.get('https://asistenciasimposio-api.onrender.com/asistencia/reporte/genero', {
             headers: {
                 Authorization: `Bearer ${token}`
             }
@@ -66,7 +66,7 @@ const obtenerAsistenciaPorGenero = async (token) => {
 // 📊 Obtener asistentes en tiempo real
 const obtenerTiempoReal = async (token) => {
     try {
-        const response = await axios.get('http://127.0.0.1:8000/asistencia/reporte/tiempo-real', {
+        const response = await axios.get('https://asistenciasimposio-api.onrender.com/asistencia/reporte/tiempo-real', {
             headers: {
                 Authorization: `Bearer ${token}`
             }

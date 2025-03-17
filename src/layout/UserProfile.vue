@@ -10,7 +10,7 @@ const router = useRouter();
 onMounted(async () => {
     try {
         const token = localStorage.getItem('access_token'); // Obtener el token de localStorage
-        const response = await axios.get('http://127.0.0.1:8000/auth/user/me', {
+        const response = await axios.get('https://asistenciasimposio-api.onrender.com/auth/user/me', {
             headers: {
                 Authorization: `Bearer ${token}`
             }

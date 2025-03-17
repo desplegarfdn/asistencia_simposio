@@ -30,7 +30,7 @@ const handleLogin = async () => {
         formData.append('username', email.value.trim());
         formData.append('password', password.value.trim());
 
-        const loginResponse = await axios.post('http://127.0.0.1:8000/auth/login', formData, {
+        const loginResponse = await axios.post('https://asistenciasimposio-api.onrender.com/auth/login', formData, {
             headers: { 'Content-Type': 'application/x-www-form-urlencoded' }
         });
 

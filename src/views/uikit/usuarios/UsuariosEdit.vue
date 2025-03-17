@@ -40,7 +40,7 @@ const buscarUsuario = async () => {
     }
 
     try {
-        const response = await axios.get(`http://127.0.0.1:8000/usuarios/buscar/${username.value.trim()}`, {
+        const response = await axios.get(`https://asistenciasimposio-api.onrender.com/usuarios/buscar/${username.value.trim()}`, {
             headers: { Authorization: `Bearer ${token}` }
         });
 
@@ -78,7 +78,7 @@ const actualizarUsuario = async () => {
     }
 
     try {
-        await axios.put(`http://127.0.0.1:8000/usuarios/editar/${username.value.trim()}`, formData.value, {
+        await axios.put(`https://asistenciasimposio-api.onrender.com/usuarios/editar/${username.value.trim()}`, formData.value, {
             headers: {
                 Authorization: `Bearer ${token}`,
                 'Content-Type': 'application/json'
