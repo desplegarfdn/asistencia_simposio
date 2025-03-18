@@ -38,21 +38,13 @@ const processScan = async () => {
         } catch (error) {
             if (error.response?.status === 404) {
                 // 🔹 Si el backend responde con 404, significa que NO había entrada, entonces registramos la entrada
-                await axios.post(
-                    'https://asistenciasimposio-api.onrender.com/asistencia/entrada',
-                    {},
-                    {
-                        params: { persona_id: scannedId.value.trim() },
-                        headers: {
-                            Authorization: `Bearer ${token}`,
-                            'Content-Type': 'application/json'
-                        }
-                    }
-                );
-
-                toast.add({ severity: 'success', summary: 'Entrada Registrada', detail: `ID: ${scannedId.value}`, life: 3000 });
+                toast.add({
+                    severity: 'warn',
+                    summary: 'No se puede registrar salida',
+                    detail: `No se encontró una entrada previa para el ID: ${scannedId.value}`,
+                    life: 4000
+                });
             } else {
-                // 🔹 Cualquier otro error
                 throw error;
             }
         }

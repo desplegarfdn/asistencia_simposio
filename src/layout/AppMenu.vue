@@ -60,7 +60,7 @@ const model = ref([
                           ]
                       },
                       {
-                          label: 'Resportes',
+                          label: 'Reportes',
                           icon: 'pi pi-fw pi-history',
                           items: [{ label: 'Ver Acciones', icon: 'pi pi-fw pi-eye', to: '/uikit/accionesultima' }]
                       }
