@@ -76,6 +76,7 @@ onMounted(() => {
 });
 </script>
 
+
 <template>
     <div class="container mx-auto text-center mt-10">
         <h2 class="text-3xl font-bold mb-8">Escaneo de Asistencia Salida</h2>
@@ -84,6 +85,11 @@ onMounted(() => {
         <input ref="inputRef" v-model="scannedId" @input="handleScanInput" class="absolute opacity-0" autofocus />
 
         <p class="text-gray-700 text-lg">Escanea la matrícula o número de plaza...</p>
+
+        <!-- Imagen Ocelote UNACH -->
+        <div class="image-container">
+            <img src="@/assets/logocelote.jpg" alt="Simposio" />
+        </div>
 
         <!-- Notificaciones Toast -->
         <Toast />
@@ -98,4 +104,18 @@ onMounted(() => {
     border-radius: 12px;
     box-shadow: 0px 6px 12px rgba(0, 0, 0, 0.15);
 }
+
+.image-container {
+    display: flex;
+    justify-content: center;
+    margin-top: 20px;
+}
+
+.image-container img {
+    width: 250px;
+    height: auto;
+    border-radius: 10px;
+    
+}
 </style>
+

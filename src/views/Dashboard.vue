@@ -16,7 +16,7 @@ const obtenerUsuario = async () => {
         const token = obtenerToken();
         const response = await axios.get('https://asistenciasimposio-api.onrender.com/auth/user/me', {
             headers: {
-                Authorization: `Bearer ${token}`
+                Authorization:  `Bearer ${token}`
             }
         });
 
@@ -38,7 +38,7 @@ const obtenerAsistenciaPorCarrera = async (token) => {
     try {
         const response = await axios.get('https://asistenciasimposio-api.onrender.com/asistencia/reporte/total-carrera', {
             headers: {
-                Authorization: `Bearer ${token}`
+                Authorization:  `Bearer ${token}`
             }
         });
         totalAsistenciaCarrera.value = response.data;
@@ -53,7 +53,7 @@ const obtenerAsistenciaPorGenero = async (token) => {
     try {
         const response = await axios.get('https://asistenciasimposio-api.onrender.com/asistencia/reporte/genero', {
             headers: {
-                Authorization: `Bearer ${token}`
+                Authorization:  `Bearer ${token}`
             }
         });
         asistenciaGenero.value = response.data;
@@ -83,7 +83,6 @@ onMounted(() => {
     obtenerUsuario();
 });
 </script>
-
 <template>
     <div class="dashboard">
         <!-- Mensaje de bienvenida -->
@@ -92,66 +91,80 @@ onMounted(() => {
             <h2>Panel de Estadísticas de Asistencia - Simposio Internacional</h2>
         </div>
 
-        <!-- Tarjetas con reportes -->
-        <div class="grid">
-            <!-- 🔹 Total asistentes por carrera -->
-            <div class="card large-card">
-                <h3>Asistencia por Carrera</h3>
-                <ul v-if="totalAsistenciaCarrera.length">
-                    <li v-for="carrera in totalAsistenciaCarrera" :key="carrera.carrera">
-                        <strong>{{ carrera.carrera }}</strong
-                        >: {{ carrera.total_asistentes }} asistentes
-                    </li>
-                </ul>
-                <p v-else>Cargando datos...</p>
+        <!-- Contenedor de tarjetas e imagen -->
+        <div class="content-container">
+            <div class="cards-container">
+                <div class="card">
+                    <h3>Asistencia por Carrera</h3>
+                    <ul v-if="totalAsistenciaCarrera.length">
+                        <li v-for="carrera in totalAsistenciaCarrera" :key="carrera.carrera">
+                            <strong>{{ carrera.carrera }}</strong>: {{ carrera.total_asistentes }} asistentes
+                        </li>
+                    </ul>
+                    <p v-else>Cargando datos...</p>
+                </div>
+                <div class="card">
+                    <h3>Asistencia por Género</h3>
+                    <p><strong>Hombres:</strong> {{ asistenciaGenero.total_hombres }}</p>
+                    <p><strong>Mujeres:</strong> {{ asistenciaGenero.total_mujeres }}</p>
+                </div>
+                <div class="card">
+                    <h3>Asistentes en Tiempo Real</h3>
+                    <p class="text-large">{{ tiempoReal }}</p>
+                </div>
             </div>
-
-            <!-- 🔹 Asistencia por género -->
-            <div class="card large-card">
-                <h3>Asistencia por Género</h3>
-                <p><strong>Hombres:</strong> {{ asistenciaGenero.total_hombres }}</p>
-                <p><strong>Mujeres:</strong> {{ asistenciaGenero.total_mujeres }}</p>
-            </div>
-
-            <!-- 🔹 Asistentes en tiempo real -->
-            <div class="card large-card">
-                <h3>Asistentes en Tiempo Real</h3>
-                <p class="text-large">{{ tiempoReal }}</p>
+            <div class="image-container">
+                <img src="@/assets/logocelote.jpg" alt="Simposio" />
             </div>
         </div>
     </div>
 </template>
 
 <style scoped>
-/* 🔹 Contenedor principal */
 .dashboard {
     padding: 2rem;
     text-align: center;
 }
 
-/* 🔹 Mensaje de bienvenida */
 .welcome h1 {
     font-size: 2.5rem;
     font-weight: bold;
-    color: #003366; /* Azul UNACH */
+    color: #003366;
 }
 
 .welcome h2 {
     font-size: 1.5rem;
     font-weight: 400;
-    color: #c9a227; /* Dorado UNACH */
+    color: #c9a227;
 }
 
-/* 🔹 Diseño de tarjetas */
-.grid {
+.content-container {
     display: flex;
-    flex-wrap: wrap;
     justify-content: center;
-    gap: 1.5rem;
-    margin-top: 1.5rem;
+    align-items: center;
+    gap: 2rem;
+    margin-top: 2rem;
 }
 
-.large-card {
+.cards-container {
+    display: flex;
+    flex-direction: column;
+    gap: 1rem;
+}
+
+.image-container {
+    display: flex;
+    align-items: center;
+}
+
+.image-container img {
+    width: 490px;
+    height: auto;
+    border-radius: 10px;
+    box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.2);
+}
+
+.card {
     padding: 1.5rem;
     border-radius: 10px;
     background: white;
@@ -160,12 +173,6 @@ onMounted(() => {
     width: 350px;
 }
 
-h3 {
-    color: #003366;
-    margin-bottom: 1rem;
-}
-
-/* 🔹 Texto dentro de las tarjetas */
 .text-large {
     font-size: 2.5rem;
     font-weight: bold;
