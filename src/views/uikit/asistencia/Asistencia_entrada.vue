@@ -20,7 +20,7 @@ const sendAttendance = async () => {
         }
 
         // 🔹 Enviar solicitud al backend
-        await axios.post(
+        const response = await axios.post(
             'https://asistenciasimposio-api.onrender.com/asistencia/entrada',
             {},
             {
@@ -32,8 +32,16 @@ const sendAttendance = async () => {
             }
         );
 
-        // 🔹 Mostrar notificación de éxito
-        toast.add({ severity: 'success', summary: 'Asistencia Registrada', detail: `ID: ${scannedId.value}`, life: 3000 });
+        // 🔹 Extraer el nombre de la respuesta
+        const nombre = response.data.nombre_completo;
+
+        // 🔹 Mostrar notificación de éxito con el nombre
+        toast.add({
+            severity: 'success',
+            summary: 'Asistencia Registrada',
+            detail: `ID: ${scannedId.value} - ${nombre}`,
+            life: 3000
+        });
     } catch (error) {
         toast.add({
             severity: 'error',
@@ -100,6 +108,5 @@ onMounted(() => {
     width: 250px;
     height: auto;
     border-radius: 10px;
-    
 }
 </style>

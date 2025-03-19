@@ -21,7 +21,7 @@ const processScan = async () => {
 
         // 🔹 Intentar registrar salida primero
         try {
-            await axios.post(
+            const response = await axios.post(
                 'https://asistenciasimposio-api.onrender.com/asistencia/salida',
                 {},
                 {
@@ -33,8 +33,16 @@ const processScan = async () => {
                 }
             );
 
-            // 🔹 Si se registró la salida, mostrar mensaje y terminar
-            toast.add({ severity: 'success', summary: 'Salida Registrada', detail: `ID: ${scannedId.value}`, life: 3000 });
+            // 🔹 Extraer el nombre de la respuesta
+            const nombre = response.data.nombre_completo;
+
+            // 🔹 Si se registró la salida, mostrar mensaje con el nombre
+            toast.add({
+                severity: 'success',
+                summary: 'Salida Registrada',
+                detail: `ID: ${scannedId.value} - ${nombre}`,
+                life: 3000
+            });
         } catch (error) {
             if (error.response?.status === 404) {
                 // 🔹 Si el backend responde con 404, significa que NO había entrada, entonces registramos la entrada
@@ -76,7 +84,6 @@ onMounted(() => {
 });
 </script>
 
-
 <template>
     <div class="container mx-auto text-center mt-10">
         <h2 class="text-3xl font-bold mb-8">Escaneo de Asistencia Salida</h2>
@@ -115,7 +122,5 @@ onMounted(() => {
     width: 250px;
     height: auto;
     border-radius: 10px;
-    
 }
 </style>
-
