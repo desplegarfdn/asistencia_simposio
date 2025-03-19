@@ -71,6 +71,11 @@ onMounted(() => {
 
         <p class="text-gray-700 text-lg">Escanea la matrícula o número de plaza...</p>
 
+        <!-- Imagen Ocelote UNACH -->
+        <div class="image-container">
+            <img src="@/assets/logocelote.jpg" alt="Simposio" />
+        </div>
+
         <!-- Notificaciones Toast -->
         <Toast />
     </div>
@@ -85,4 +90,16 @@ onMounted(() => {
     box-shadow: 0px 6px 12px rgba(0, 0, 0, 0.15);
 }
 
+.image-container {
+    display: flex;
+    justify-content: center;
+    margin-top: 20px;
+}
+
+.image-container img {
+    width: 250px;
+    height: auto;
+    border-radius: 10px;
+    
+}
 </style>
