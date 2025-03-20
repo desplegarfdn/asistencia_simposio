@@ -6,6 +6,8 @@ const nombreCompleto = ref('');
 const totalAsistenciaCarrera = ref([]);
 const asistenciaGenero = ref({ total_hombres: 0, total_mujeres: 0 });
 const tiempoReal = ref(0);
+const faltantesSalida = ref(0);
+const faltantesEvento = ref(0);
 
 // Obtener token JWT desde localStorage
 const obtenerToken = () => localStorage.getItem('access_token');
@@ -16,7 +18,7 @@ const obtenerUsuario = async () => {
         const token = obtenerToken();
         const response = await axios.get('https://asistenciasimposio-api.onrender.com/auth/user/me', {
             headers: {
-                Authorization:  `Bearer ${token}`
+                Authorization: `Bearer ${token}`
             }
         });
 
@@ -27,33 +29,35 @@ const obtenerUsuario = async () => {
         await obtenerAsistenciaPorCarrera(token);
         await obtenerAsistenciaPorGenero(token);
         await obtenerTiempoReal(token);
+        await obtenerFaltantesSalida(token);
+        await obtenerFaltantesEvento(token);
     } catch (error) {
         console.error('Error al obtener el usuario:', error);
         nombreCompleto.value = 'Usuario desconocido';
     }
 };
 
-// 📊 Obtener el total de asistentes por carrera
+// 📊 Obtener el total de asistentes por carrera (del día actual)
 const obtenerAsistenciaPorCarrera = async (token) => {
     try {
-        const response = await axios.get('https://asistenciasimposio-api.onrender.com/asistencia/reporte/total-carrera', {
+        const response = await axios.get('https://asistenciasimposio-api.onrender.com/asistencia/reporte/total-carrera/hoy', {
             headers: {
-                Authorization:  `Bearer ${token}`
+                Authorization: `Bearer ${token}`
             }
         });
-        totalAsistenciaCarrera.value = response.data;
+        totalAsistenciaCarrera.value = response.data.detalle;
     } catch (error) {
         console.error('Error al obtener asistencia por carrera:', error);
         totalAsistenciaCarrera.value = [];
     }
 };
 
-// 📊 Obtener la asistencia por género (Hombres y Mujeres)
+// 📊 Obtener la asistencia por género (Hombres y Mujeres) del día actual
 const obtenerAsistenciaPorGenero = async (token) => {
     try {
-        const response = await axios.get('https://asistenciasimposio-api.onrender.com/asistencia/reporte/genero', {
+        const response = await axios.get('https://asistenciasimposio-api.onrender.com/asistencia/reporte/genero/hoy', {
             headers: {
-                Authorization:  `Bearer ${token}`
+                Authorization: `Bearer ${token}`
             }
         });
         asistenciaGenero.value = response.data;
@@ -78,11 +82,43 @@ const obtenerTiempoReal = async (token) => {
     }
 };
 
+// 📊 Obtener cuántos alumnos aún no han registrado su salida
+const obtenerFaltantesSalida = async (token) => {
+    try {
+        const response = await axios.get('https://asistenciasimposio-api.onrender.com/asistencia/reporte/faltantes-salida/hoy', {
+            headers: {
+                Authorization: `Bearer ${token}`
+            }
+        });
+        faltantesSalida.value = response.data.total_faltantes;
+    } catch (error) {
+        console.error('Error al obtener faltantes de salida:', error);
+        faltantesSalida.value = 0;
+    }
+};
+
+// 📊 Obtener cuántos alumnos faltaron al evento en el día actual
+const obtenerFaltantesEvento = async (token) => {
+    try {
+        const fechaHoy = new Date().toISOString().split('T')[0]; // Formatear fecha YYYY-MM-DD
+        const response = await axios.get(`https://asistenciasimposio-api.onrender.com/asistencia/reporte/faltantes-evento?fecha=${fechaHoy}`, {
+            headers: {
+                Authorization: `Bearer ${token}`
+            }
+        });
+        faltantesEvento.value = response.data.total_faltantes;
+    } catch (error) {
+        console.error('Error al obtener faltantes del evento:', error);
+        faltantesEvento.value = 0;
+    }
+};
+
 // Cargar datos al montar el componente
 onMounted(() => {
     obtenerUsuario();
 });
 </script>
+
 <template>
     <div class="dashboard">
         <!-- Mensaje de bienvenida -->
@@ -95,22 +131,32 @@ onMounted(() => {
         <div class="content-container">
             <div class="cards-container">
                 <div class="card">
-                    <h3>Asistencia por Carrera</h3>
-                    <ul v-if="totalAsistenciaCarrera.length">
+                    <h3>Asistencia por Carrera (Hoy)</h3>
+                    <ul v-if="totalAsistenciaCarrera.length > 0">
                         <li v-for="carrera in totalAsistenciaCarrera" :key="carrera.carrera">
-                            <strong>{{ carrera.carrera }}</strong>: {{ carrera.total_asistentes }} asistentes
+                            <strong>{{ carrera.carrera }}</strong
+                            >: {{ carrera.total_asistentes }} asistentes
                         </li>
                     </ul>
-                    <p v-else>Cargando datos...</p>
+                    <p v-else>No hay registros de asistencia hoy.</p>
                 </div>
+
                 <div class="card">
-                    <h3>Asistencia por Género</h3>
+                    <h3>Asistencia por Género (Hoy)</h3>
                     <p><strong>Hombres:</strong> {{ asistenciaGenero.total_hombres }}</p>
                     <p><strong>Mujeres:</strong> {{ asistenciaGenero.total_mujeres }}</p>
                 </div>
                 <div class="card">
                     <h3>Asistentes en Tiempo Real</h3>
                     <p class="text-large">{{ tiempoReal }}</p>
+                </div>
+                <div class="card">
+                    <h3>Alumnos sin salida registrada</h3>
+                    <p class="text-large">{{ faltantesSalida }}</p>
+                </div>
+                <div class="card">
+                    <h3>Alumnos que faltaron al evento</h3>
+                    <p class="text-large">{{ faltantesEvento }}</p>
                 </div>
             </div>
             <div class="image-container">
